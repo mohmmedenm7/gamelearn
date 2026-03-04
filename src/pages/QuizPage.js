@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCheckCircle, FaTimesCircle, FaTrophy, FaRedo, FaArrowLeft, FaStar } from 'react-icons/fa';
 import { getRoadmapById, getStepById } from '../data/roadmaps';
@@ -7,7 +7,7 @@ import './QuizPage.css';
 
 function QuizPage() {
     const { id, stepId } = useParams();
-    const navigate = useNavigate();
+
     const roadmap = getRoadmapById(id);
     const step = getStepById(id, stepId);
 
@@ -30,7 +30,7 @@ function QuizPage() {
     const quiz = step.quiz;
     const totalQuestions = quiz.length;
     const passingScore = Math.ceil(totalQuestions * 0.6);
-    const passed = score >= passingScore;
+
 
     const handleAnswer = (optionIndex) => {
         if (isAnswered) return;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaCheckCircle, FaLock, FaPlay, FaArrowLeft } from 'react-icons/fa';
+import { FaCheckCircle, FaLock, FaArrowLeft } from 'react-icons/fa';
 import { getRoadmapById } from '../data/roadmaps';
 import './RoadmapPage.css';
 
