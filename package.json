@@ -7,8 +7,11 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
+    "framer-motion": "^12.35.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-icons": "^5.6.0",
+    "react-router-dom": "^7.13.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -16,7 +19,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev:frontend": "cross-env PORT=3000 react-scripts start",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:admin": "cd backend/admin-dashboard && cross-env PORT=3001 react-scripts start",
+    "dev": "concurrently -n \"BACKEND,FRONTEND,ADMIN\" -c \"yellow,cyan,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:admin\"",
+    "install:all": "npm install && cd backend && npm install && cd admin-dashboard && npm install",
+    "seed": "cd backend && npm run seed",
+    "build:frontend": "react-scripts build",
+    "build:admin": "cd backend/admin-dashboard && npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +46,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^10.1.0"
   }
 }
