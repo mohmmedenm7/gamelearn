@@ -19,7 +19,7 @@ import { EmailModule } from './email/email.module';
     // Load .env
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: ['.env', '../.env'],
     }),
 
     // MongoDB connection
