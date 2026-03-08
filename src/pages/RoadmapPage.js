@@ -196,8 +196,6 @@ function RoadmapPage() {
                 {pathRows.map((row, rowIndex) => {
                     // Figure out connector direction for after this row
                     const isLastRow = rowIndex === pathRows.length - 1;
-                    const nextRowReversed = !isLastRow && pathRows[rowIndex + 1].reversed;
-
                     // Last step global index in this row
                     const lastStepGlobalIdx = row.startIndex + row.steps.length - 1;
                     const lastStepCompleted = progress[roadmap.steps[lastStepGlobalIdx]?.id] === true;
