@@ -403,6 +403,17 @@
     color: white;
 }
 
+.project-btn {
+    color: white;
+    box-shadow: var(--shadow-glow);
+}
+
+.project-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(162, 155, 254, 0.5);
+    color: white;
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */

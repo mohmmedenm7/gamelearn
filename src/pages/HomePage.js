@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaStar, FaRocket } from 'react-icons/fa';
+import { FaArrowLeft, FaStar, FaRocket, FaUsers, FaGlobe } from 'react-icons/fa';
 import { roadmaps } from '../data/roadmaps';
 import './HomePage.css';
 
-function HomePage() {
+function HomePage({ onLoginClick }) {
+    const isLoggedIn = !!localStorage.getItem('token');
+
     return (
         <div className="home-page">
             {/* Hero Section */}
@@ -33,6 +35,14 @@ function HomePage() {
                         موارد تعليمية مختارة واختبارات لكل مرحلة.
                     </p>
 
+                    {!isLoggedIn && (
+                        <div className="hero-cta-actions">
+                            <button className="btn-hero-primary" onClick={onLoginClick}>
+                                ابدأ رحلتك مجاناً
+                            </button>
+                        </div>
+                    )}
+
                     <div className="hero-stats">
                         <div className="hero-stat">
                             <span className="hero-stat-number">{roadmaps.length}</span>
@@ -59,6 +69,24 @@ function HomePage() {
                 <div className="hero-decoration hero-decoration-1"></div>
                 <div className="hero-decoration hero-decoration-2"></div>
                 <div className="hero-decoration hero-decoration-3"></div>
+            </section>
+
+            {/* Quick Links Section (NEW) */}
+            <section className="quick-links-section">
+                <Link to="/leaderboard" className="quick-link-card glass border-yellow">
+                    <FaGlobe className="ql-icon text-yellow" />
+                    <div>
+                        <h3>تصنيف الأبطال</h3>
+                        <p>شاهد ترتيبك العالمي بين اللاعبين</p>
+                    </div>
+                </Link>
+                <Link to="/groups" className="quick-link-card glass border-purple">
+                    <FaUsers className="ql-icon text-purple" />
+                    <div>
+                        <h3>مجموعات التحدي</h3>
+                        <p>تعلم مع أصدقائك وتنافسوا معاً</p>
+                    </div>
+                </Link>
             </section>
 
             {/* Roadmaps Section */}

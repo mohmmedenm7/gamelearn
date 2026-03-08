@@ -87,7 +87,8 @@ function QuizPage() {
     // Show results
     if (showResults) {
         const finalScore = answers.filter(a => a.isCorrect).length;
-        const finalPassed = finalScore >= passingScore;
+        // NEW LOGIC: >= 2 correct is a pass
+        const finalPassed = finalScore >= 2;
 
         return (
             <div className="quiz-page">
@@ -117,8 +118,8 @@ function QuizPage() {
 
                         <p className="results-message">
                             {finalPassed
-                                ? 'لقد تم فتح الخطوة التالية في خارطة الطريق!'
-                                : `تحتاج حد أدنى ${passingScore} إجابات صحيحة للنجاح. حاول مرة أخرى!`
+                                ? 'تهانينا! لقد حصلت على النقاط ويمكنك التقدم للخطوة التالية.'
+                                : 'تحتاج لإجابة سؤالين (2) على الأقل بشكل صحيح للنجاح. يجب عليك إعادة الاختبار.'
                             }
                         </p>
 
@@ -148,20 +149,34 @@ function QuizPage() {
                         </div>
 
                         <div className="results-actions">
-                            {!finalPassed && (
-                                <button onClick={handleRestart} className="results-btn retry-btn">
-                                    <FaRedo />
-                                    أعد المحاولة
-                                </button>
+                            {/* If passed, retry is optional (for points). If failed, retry is mandatory. */}
+                            <button onClick={handleRestart} className="results-btn retry-btn">
+                                <FaRedo />
+                                {finalPassed ? 'إعادة لتحسين النقاط' : 'أعد المحاولة إجبارياً'}
+                            </button>
+
+                            {finalPassed && (
+                                <>
+                                    {/* Mock check: in reality we'd check step.hasProject or similar backend flag */}
+                                    {stepId === 's1' || stepId === 's2' ? (
+                                        <Link
+                                            to={`/roadmap/${id}/step/${stepId}/project`}
+                                            className="results-btn project-btn"
+                                            style={{ background: '#a29bfe', color: 'white' }}
+                                        >
+                                            الذهاب للمشروع العملي 🚀
+                                        </Link>
+                                    ) : null}
+                                    <Link
+                                        to={`/roadmap/${id}`}
+                                        className="results-btn roadmap-btn"
+                                        style={{ background: roadmap.gradient }}
+                                    >
+                                        العودة لخارطة الطريق
+                                        <FaArrowLeft />
+                                    </Link>
+                                </>
                             )}
-                            <Link
-                                to={`/roadmap/${id}`}
-                                className="results-btn roadmap-btn"
-                                style={{ background: roadmap.gradient }}
-                            >
-                                العودة لخارطة الطريق
-                                <FaArrowLeft />
-                            </Link>
                         </div>
                     </motion.div>
                 </div>

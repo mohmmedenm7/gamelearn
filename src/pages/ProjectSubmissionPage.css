@@ -1,0 +1,293 @@
+.project-submission-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: white;
+}
+
+.btn-back {
+    background: transparent;
+    color: var(--text-light);
+    border: none;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+.btn-back:hover {
+    color: var(--primary);
+}
+
+.project-layout {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.project-brief {
+    flex: 1;
+    background: linear-gradient(135deg, rgba(30, 30, 50, 0.8), rgba(20, 20, 40, 0.9));
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(108, 92, 231, 0.3);
+}
+
+.brief-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+}
+
+.brief-icon {
+    font-size: 2rem;
+    color: #a29bfe;
+}
+
+.brief-header h2 {
+    margin: 0;
+    flex: 1;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.points-badge {
+    background: rgba(253, 203, 110, 0.15);
+    color: #fdcb6e;
+    padding: 0.4rem 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(253, 203, 110, 0.3);
+}
+
+.brief-content h3 {
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.brief-content p {
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.brief-warning {
+    margin-top: 1.5rem;
+    background: rgba(255, 159, 67, 0.1);
+    border-left: 4px solid #feca57;
+    padding: 1rem;
+    border-radius: 0 8px 8px 0;
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.project-editor {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    background: rgba(15, 15, 25, 0.9);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+}
+
+.editor-header {
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.editor-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.code-textarea {
+    flex: 1;
+    width: 100%;
+    min-height: 400px;
+    background: transparent;
+    color: #a29bfe;
+    padding: 1.5rem;
+    border: none;
+    font-family: 'Fira Code', 'Courier New', Courier, monospace;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.code-textarea:focus {
+    outline: none;
+}
+
+.editor-footer {
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-submit-code {
+    background: linear-gradient(135deg, var(--primary), var(--primary-glow));
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.2s;
+}
+
+.btn-submit-code:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+}
+
+.btn-submit-code:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.loader-small {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.project-result {
+    margin-top: 2rem;
+    padding: 2rem;
+    border-radius: 20px;
+    animation: slideUp 0.3s ease;
+}
+
+.project-result.passed {
+    background: rgba(46, 204, 113, 0.05);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.project-result.failed {
+    background: rgba(231, 76, 60, 0.05);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-header h3 {
+    margin: 0;
+}
+
+.icon-pass {
+    color: #2ecc71;
+    font-size: 2rem;
+}
+
+.icon-fail {
+    color: #e74c3c;
+    font-size: 2rem;
+}
+
+.result-details h4 {
+    margin-top: 1.5rem;
+    color: var(--text-light);
+}
+
+.result-grade {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.test-case {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border-right: 4px solid transparent;
+}
+
+.test-case.pass {
+    border-color: #2ecc71;
+}
+
+.test-case.fail {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.test-case div {
+    margin-bottom: 0.5rem;
+    font-family: monospace;
+    font-size: 1.1rem;
+}
+
+.test-case div strong {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-muted);
+}
+
+.test-status {
+    margin-top: 1rem !important;
+    font-weight: bold;
+}
+
+.btn-continue {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.btn-continue:hover {
+    background: #27ae60;
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    .project-layout {
+        flex-direction: column;
+    }
+}
