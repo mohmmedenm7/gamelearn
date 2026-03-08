@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaUsers, FaArrowRight, FaCrown, FaStar, FaShareAlt, FaCog, FaSignOutAlt, FaTrophy } from 'react-icons/fa';
+import { FaUsers, FaArrowRight, FaCrown, FaShareAlt, FaCog, FaSignOutAlt, FaTrophy } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { groupService } from '../services/api';
 import CharacterAvatar from '../components/CharacterAvatar';
@@ -19,21 +19,22 @@ function GroupDetailPage() {
             navigate('/login');
             return;
         }
+
+        const fetchGroupDetails = async () => {
+            try {
+                const res = await groupService.getDetails(id);
+                setGroupData(res.data);
+            } catch (e) {
+                console.error(e);
+                alert('المجموعة غير موجودة أو أنك لست عضواً بها');
+                navigate('/groups');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchGroupDetails();
     }, [id, user, navigate]);
-
-    const fetchGroupDetails = async () => {
-        try {
-            const res = await groupService.getDetails(id);
-            setGroupData(res.data);
-        } catch (e) {
-            console.error(e);
-            alert('المجموعة غير موجودة أو أنك لست عضواً بها');
-            navigate('/groups');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleShare = () => {
         if (navigator.share) {

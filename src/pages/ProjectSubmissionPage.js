@@ -3,11 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaCode, FaUpload, FaCheckCircle, FaTimesCircle, FaArrowRight, FaTasks } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 import './ProjectSubmissionPage.css';
-
-// Using local axios to bypass interceptor if necessary, but we'll use the authenticated one.
-import api from '../services/api';
 
 function ProjectSubmissionPage() {
     const { id, stepId } = useParams();

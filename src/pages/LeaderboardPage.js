@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaGlobe, FaTrophy, FaMedal, FaStar } from 'react-icons/fa';
+import { FaGlobe, FaStar } from 'react-icons/fa';
 import { userService } from '../services/api';
 import CharacterAvatar from '../components/CharacterAvatar';
 import './LeaderboardPage.css';

@@ -82,7 +82,7 @@ function GroupsPage() {
         try {
             if (joinCode.includes('@')) {
                 // Join by username (format: @username#groupId or something similar, simple version just username)
-                const username = joinCode.replace('@', '');
+                // const username = joinCode.replace('@', '');
                 alert('ميزة الانضمام عبر المستخدم تحتاج لرقم المجموعة. استخدم كود الدعوة حالياً.');
             } else {
                 await groupService.joinByCode(joinCode);
