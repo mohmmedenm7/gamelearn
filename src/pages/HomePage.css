@@ -321,11 +321,9 @@
         height: 1px;
     }
 
-}
-
-.roadmaps-grid {
-    grid-template-columns: 1fr;
-}
+    .roadmaps-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ============================================
