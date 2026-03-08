@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaUsers, FaArrowRight, FaCrown, FaStar, FaShareAlt, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaUsers, FaArrowRight, FaCrown, FaStar, FaShareAlt, FaCog, FaSignOutAlt, FaTrophy } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { groupService } from '../services/api';
 import CharacterAvatar from '../components/CharacterAvatar';
