@@ -1,12 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaStar, FaRocket, FaUsers, FaGlobe } from 'react-icons/fa';
 import { roadmaps } from '../data/roadmaps';
+import { useAuth } from '../context/AuthContext';
+import { progressService } from '../services/api';
 import './HomePage.css';
 
 function HomePage({ onLoginClick }) {
     const isLoggedIn = !!localStorage.getItem('token');
+    const { user } = useAuth();
+    const [backendProgress, setBackendProgress] = useState(null);
+
+    useEffect(() => {
+        const loadProgress = async () => {
+            if (user) {
+                try {
+                    const response = await progressService.get();
+                    setBackendProgress(response.data || {});
+                } catch (err) {
+                    console.error('Error loading progress:', err);
+                }
+            }
+        };
+        loadProgress();
+    }, [user]);
+
+    const getProgress = (roadmapId, totalSteps) => {
+        try {
+            // Use backend progress if available
+            if (backendProgress && backendProgress[roadmapId]) {
+                const completed = Object.keys(backendProgress[roadmapId]).length;
+                return Math.round((completed / totalSteps) * 100);
+            }
+            // Fallback to localStorage
+            const progress = JSON.parse(localStorage.getItem('roadmap-progress') || '{}');
+            const completed = progress[roadmapId] ? Object.keys(progress[roadmapId]).length : 0;
+            return Math.round((completed / totalSteps) * 100);
+        } catch {
+            return 0;
+        }
+    };
 
     return (
         <div className="home-page">
@@ -71,7 +105,7 @@ function HomePage({ onLoginClick }) {
                 <div className="hero-decoration hero-decoration-3"></div>
             </section>
 
-            {/* Quick Links Section (NEW) */}
+            {/* Quick Links Section */}
             <section className="quick-links-section">
                 <Link to="/leaderboard" className="quick-link-card glass border-yellow">
                     <FaGlobe className="ql-icon text-yellow" />
@@ -116,9 +150,7 @@ function HomePage({ onLoginClick }) {
                                 id={`roadmap-card-${roadmap.id}`}
                             >
                                 <div className="roadmap-card-glow"></div>
-
                                 <div className="roadmap-card-icon">{roadmap.icon}</div>
-
                                 <h3 className="roadmap-card-title">{roadmap.title}</h3>
                                 <p className="roadmap-card-title-en">{roadmap.titleEn}</p>
                                 <p className="roadmap-card-description">{roadmap.description}</p>
@@ -132,7 +164,6 @@ function HomePage({ onLoginClick }) {
                                     </span>
                                 </div>
 
-                                {/* Progress indicator */}
                                 <div className="roadmap-card-progress">
                                     <div className="roadmap-card-progress-bar">
                                         <div
@@ -151,16 +182,6 @@ function HomePage({ onLoginClick }) {
             </section>
         </div>
     );
-}
-
-function getProgress(roadmapId, totalSteps) {
-    try {
-        const progress = JSON.parse(localStorage.getItem('roadmap-progress') || '{}');
-        const completed = progress[roadmapId] ? Object.keys(progress[roadmapId]).length : 0;
-        return Math.round((completed / totalSteps) * 100);
-    } catch {
-        return 0;
-    }
 }
 
 export default HomePage;

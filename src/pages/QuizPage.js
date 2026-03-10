@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCheckCircle, FaTimesCircle, FaTrophy, FaRedo, FaArrowLeft, FaStar } from 'react-icons/fa';
 import { getRoadmapById, getStepById } from '../data/roadmaps';
+import { useAuth } from '../context/AuthContext';
+import { progressService } from '../services/api';
 import './QuizPage.css';
 
 function QuizPage() {
     const { id, stepId } = useParams();
+    const { user } = useAuth();
 
     const roadmap = getRoadmapById(id);
     const step = getStepById(id, stepId);
@@ -17,6 +20,21 @@ function QuizPage() {
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
     const [answers, setAnswers] = useState([]);
+    const [retryCount, setRetryCount] = useState(0);
+    const [quizQuestions, setQuizQuestions] = useState([]);
+
+    // Get quiz questions - shuffle on retry to show different questions
+    useEffect(() => {
+        if (step && step.quiz) {
+            if (retryCount > 0 && step.quiz.length > 3) {
+                // On retry, shuffle and pick different questions
+                const shuffled = [...step.quiz].sort(() => 0.5 - Math.random());
+                setQuizQuestions(shuffled.slice(0, Math.min(step.quiz.length, 5)));
+            } else {
+                setQuizQuestions([...step.quiz]);
+            }
+        }
+    }, [step, retryCount]);
 
     if (!roadmap || !step) {
         return (
@@ -27,10 +45,8 @@ function QuizPage() {
         );
     }
 
-    const quiz = step.quiz;
+    const quiz = quizQuestions;
     const totalQuestions = quiz.length;
-    const passingScore = Math.ceil(totalQuestions * 0.6);
-
 
     const handleAnswer = (optionIndex) => {
         if (isAnswered) return;
@@ -58,18 +74,28 @@ function QuizPage() {
             setIsAnswered(false);
         } else {
             setShowResults(true);
-            if (score + (selectedAnswer === quiz[currentQuestion]?.correct ? 1 : 0) >= passingScore) {
+            if (score + (selectedAnswer === quiz[currentQuestion]?.correct ? 1 : 0) >= 2) {
                 saveProgress();
             }
         }
     };
 
-    const saveProgress = () => {
+    const saveProgress = async () => {
         try {
+            // Save to localStorage (for non-logged-in users)
             const stored = JSON.parse(localStorage.getItem('roadmap-progress') || '{}');
             if (!stored[id]) stored[id] = {};
             stored[id][stepId] = true;
             localStorage.setItem('roadmap-progress', JSON.stringify(stored));
+
+            // Also save to backend if logged in
+            if (user) {
+                try {
+                    await progressService.save(id, stepId, true);
+                } catch (err) {
+                    console.error('Error saving progress to backend:', err);
+                }
+            }
         } catch (e) {
             console.error('Error saving progress:', e);
         }
@@ -82,12 +108,12 @@ function QuizPage() {
         setScore(0);
         setShowResults(false);
         setAnswers([]);
+        setRetryCount(prev => prev + 1); // Trigger re-shuffle
     };
 
     // Show results
     if (showResults) {
         const finalScore = answers.filter(a => a.isCorrect).length;
-        // NEW LOGIC: >= 2 correct is a pass
         const finalPassed = finalScore >= 2;
 
         return (
@@ -119,7 +145,7 @@ function QuizPage() {
                         <p className="results-message">
                             {finalPassed
                                 ? 'تهانينا! لقد حصلت على النقاط ويمكنك التقدم للخطوة التالية.'
-                                : 'تحتاج لإجابة سؤالين (2) على الأقل بشكل صحيح للنجاح. يجب عليك إعادة الاختبار.'
+                                : 'تحتاج لإجابة سؤالين (2) على الأقل بشكل صحيح للنجاح. عند الإعادة ستظهر لك أسئلة مختلفة!'
                             }
                         </p>
 
@@ -149,15 +175,13 @@ function QuizPage() {
                         </div>
 
                         <div className="results-actions">
-                            {/* If passed, retry is optional (for points). If failed, retry is mandatory. */}
                             <button onClick={handleRestart} className="results-btn retry-btn">
                                 <FaRedo />
-                                {finalPassed ? 'إعادة لتحسين النقاط' : 'أعد المحاولة إجبارياً'}
+                                {finalPassed ? 'إعادة لتحسين النقاط' : 'أعد المحاولة (أسئلة مختلفة!)'}
                             </button>
 
                             {finalPassed && (
                                 <>
-                                    {/* Mock check: in reality we'd check step.hasProject or similar backend flag */}
                                     {stepId === 's1' || stepId === 's2' ? (
                                         <Link
                                             to={`/roadmap/${id}/step/${stepId}/project`}
@@ -184,6 +208,14 @@ function QuizPage() {
         );
     }
 
+    if (quiz.length === 0) {
+        return (
+            <div className="not-found">
+                <h2>جاري تحميل الأسئلة...</h2>
+            </div>
+        );
+    }
+
     const question = quiz[currentQuestion];
 
     return (
@@ -201,6 +233,7 @@ function QuizPage() {
                     </Link>
                     <h2 className="quiz-step-title" style={{ color: roadmap.color }}>
                         اختبار: {step.title}
+                        {retryCount > 0 && <span style={{ fontSize: '0.7em', opacity: 0.7 }}> (محاولة {retryCount + 1})</span>}
                     </h2>
                 </motion.div>
 
@@ -227,7 +260,7 @@ function QuizPage() {
                 {/* Question card */}
                 <AnimatePresence mode="wait">
                     <motion.div
-                        key={currentQuestion}
+                        key={`${currentQuestion}-${retryCount}`}
                         className="quiz-question-card glass"
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}

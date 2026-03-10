@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { authService } from '../services/api';
+import { authService, progressService } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -16,6 +16,18 @@ export const AuthProvider = ({ children }) => {
                     const response = await authService.getCurrentUser();
                     setUser(response.user);
                     localStorage.setItem('user', JSON.stringify(response.user));
+
+                    // Sync localStorage progress to backend
+                    try {
+                        const localProgress = JSON.parse(localStorage.getItem('roadmap-progress') || '{}');
+                        if (Object.keys(localProgress).length > 0) {
+                            await progressService.sync(localProgress);
+                            // Clear localStorage progress after sync
+                            localStorage.removeItem('roadmap-progress');
+                        }
+                    } catch (syncErr) {
+                        console.error('Progress sync error:', syncErr);
+                    }
                 }
             } catch (error) {
                 console.error('Auth init error:', error);

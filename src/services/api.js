@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -19,6 +19,18 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Response interceptor to handle 401 errors
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+        }
         return Promise.reject(error);
     }
 );
@@ -56,6 +68,9 @@ export const authService = {
 export const userService = {
     updateProfile: async (data) => {
         const response = await api.put('/users/profile', data);
+        if (response.data.user) {
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
         return response.data;
     },
 
@@ -83,6 +98,23 @@ export const roadmapService = {
         const response = await api.get(`/roadmaps/${id}`);
         return response.data;
     }
+};
+
+export const progressService = {
+    get: async () => {
+        const response = await api.get('/progress');
+        return response.data;
+    },
+
+    save: async (roadmapId, stepId, completed = true) => {
+        const response = await api.post('/progress', { roadmapId, stepId, completed });
+        return response.data;
+    },
+
+    sync: async (localProgress) => {
+        const response = await api.put('/progress/sync', { progress: localProgress });
+        return response.data;
+    },
 };
 
 export const groupService = {
